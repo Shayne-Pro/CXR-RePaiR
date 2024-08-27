@@ -1,0 +1,37 @@
+Create Data Split
+python data_preprocessing/split_mimic.py \
+  --report_files_dir='mimic-cxr-jpg/files' \
+  --split_path='mimic-cxr-jpg/mimic-cxr-2.0.0-split.csv.gz' \
+  --out_dir=mimic_data
+
+Extract Impressions Section
+python data_preprocessing/extract_impressions.py \
+  --dir=mimic_data
+
+Create Test Set of Report/CXR Pairs
+python data_preprocessing/create_bootstrapped_testset.py \
+  --dir=mimic_data \
+  --bootstrap_dir=bootstrap_test \
+  --cxr_files_dir='mimic-cxr-jpg/files/'
+
+Generating embeddings for the corpus
+python gen_corpus_embeddings.py \
+  --clip_model_path='mimic-cxr-jpg/clip-imp-pretrained_128_6_after_4.pt' \
+  --clip_pretrained \
+  --data_path='mimic_data/mimic_train_sentence_impressions.csv' \
+  --out=clip_pretrained_mimic_train_sentence_embeddings.pt
+
+Creating reports
+python run_test.py \
+  --corpus_embeddings_name=clip_pretrained_mimic_train_sentence_embeddings.pt \
+  --clip_model_path='mimic-cxr-jpg/clip-imp-pretrained_128_6_after_4.pt' \
+  --clip_pretrained \
+  --out_dir=CXR-RePaiR-2_mimic_results \
+  --test_cxr_path=bootstrap_test/cxr.h5 \
+  --topk=2
+
+Testing performance
+python test_acc_batch.py \
+ --dir=CXR-RePaiR-2_mimic_results \
+ --bootstrap_dir=bootstrap_test/
+
