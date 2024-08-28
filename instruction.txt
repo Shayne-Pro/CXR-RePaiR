@@ -14,6 +14,9 @@ python data_preprocessing/create_bootstrapped_testset.py \
   --bootstrap_dir=bootstrap_test \
   --cxr_files_dir='mimic-cxr-jpg/files/'
 
+Get groundtruth labels for test reports
+CUDA_VISIBLE_DEVICES=1 python label.py -d='/workspace/code/CXR-RePaiR/bootstrap_test/reports.csv' -o='/workspace/code/CXR-RePaiR/bootstrap_test' -c='/workspace/code/CXR-RePaiR/CheXbert/chexbert.pth'
+
 Generating embeddings for the corpus
 python gen_corpus_embeddings.py \
   --clip_model_path='mimic-cxr-jpg/clip-imp-pretrained_128_6_after_4.pt' \
@@ -32,6 +35,6 @@ python run_test.py \
 
 Testing performance
 python test_acc_batch.py \
- --dir=CXR-RePaiR-2_mimic_results \
+ --dir=CXR-RePaiR-2_mimic_results/ \
  --bootstrap_dir=bootstrap_test/
 
