@@ -74,7 +74,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     
     separator = '/'
-    print(f'metrics on {args.dir.split(separator)[-2]}')
+    print(f'metrics on {args.dir.split(separator)[-1]}')
     bootstrap_f1(args)
     if args.include_s_emb:
         bootstrap_embeddings_accuracy(args)
